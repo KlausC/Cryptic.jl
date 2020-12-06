@@ -29,7 +29,7 @@ isxmody(number::Number, x::Number, y::Number) = number%y == x
 iscoprime(x::Number, y::Number) = gcd(x,y) == 1
 
 #blum blum shub generator
-type BlumBlumShub
+struct BlumBlumShub
     p::BigInt
     q::BigInt
     n::BigInt
@@ -59,7 +59,7 @@ nextnumber!(gen::BlumBlumShub) = gen.x = powermod(gen.x, 2, gen.n)
 #get next bit from generator
 nextbit!(gen::BlumBlumShub) = bin(nextnumber!(gen))[end] == '1' ? 1 : 0
 
-type BlumMicali
+struct BlumMicali
     p::BigInt
     g::BigInt
     xi::BigInt
@@ -83,7 +83,7 @@ end
 nextnumber!(gen::BlumMicali) = gen.xi = powermod(gen.g, gen.xi, gen.p)
 nextbit!(gen::BlumMicali) = nextnumber!(gen) < div(gen.p-1, 2) ? 1 : 0
 
-type RSA
+struct RSA
     e::BigInt
     n::BigInt
     xi::BigInt

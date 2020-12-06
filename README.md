@@ -1,8 +1,8 @@
 # Cryptic
 
-# Symetric
+## Symmetric
 
-#### AES
+### AES
 
 Contains operations for encrypting data using AES cipher with blocks of 256 bits.
 
@@ -10,35 +10,39 @@ Contains operations for encrypting data using AES cipher with blocks of 256 bits
 
 In order to encrypt data you should pass that object to one of cipher block object.
 
-#### Serpent
+### Serpent
 
 Contains operations for encrypting data using Serpent cipher with blocks of 128 bits.
 
     obj = Serpent128(key::ASCIIString)
-or 
+or
 
-	obj = Serpent128(key::Array{UInt8})
+    obj = Serpent128(key::Array{UInt8})
 
 In order to encrypt data you should pass that object to one of cipher block object. Actually this encrypt algorithm is quite slow, and need some optimization.
 
-# Module CipherBlocks includes:
+### Module CipherBlocks includes
 
 3 types:
 
-#### ECB:
+#### ECB
 
     constructor ECB(encryptrionType::Any)
     takes selected block encryption type
-#### CBC:
+
+#### CBC
 
     constructor CBC(encryptrionType::Any, initialVetor::Array{UInt8})
-    takes selected encryption block type and initial vector for encoding/decoding
-#### CFB:
+    takes selected encryption block type and initial vector for encoding/decodin
+
+#### CFB
 
     constructor CFB(encryptrionType::Any, initialVetor::Array{UInt8})
     takes selected encryption block type and initial vector for encoding/decoding
-#### Note:
-    encryptionType object should contain fields:
+
+#### Note
+
+     encryptionType object should contain fields:
      bits - Block size in bits
      key - Key for encryption
      encrypt - Encryption function
@@ -56,12 +60,11 @@ In order to encrypt data you should pass that object to one of cipher block obje
     Encrypts data given in encryption type object with block of selected type.
     Overwrites data buffer inside encryption type object
 
-
-# Module RSA includes:
+### Module RSA includes
 
 3 types:
 
-#### RSA1024:
+#### RSA1024
 
     constuctor RSA1024()
     takes no arguments
@@ -73,7 +76,7 @@ In order to encrypt data you should pass that object to one of cipher block obje
       k::BigInt holds length of plaintext block
       l::BigInt holds length of ciphertext block
 
-#### PublicRSA1024:
+#### PublicRSA1024
 
     constructor PublicRSA1024(rsa::RSA1024)
     takes as argument RSA1024 object to initalize its fields
@@ -83,7 +86,7 @@ In order to encrypt data you should pass that object to one of cipher block obje
       k::BigInt holds length of plaintext block
       l::BigInt holds length of ciphertext block
 
-#### PrivRSA1024:
+#### PrivRSA1024
 
     constructor PrivRSA1024(rsa::RSA1024)
     takes as argument RSA1024 object to initalize its fields
@@ -115,77 +118,76 @@ In order to encrypt data you should pass that object to one of cipher block obje
     Verifies provided signature to message with keys given in PublicRSA1024 type object.
     returns result::Bool
 
-Example:
-```
-  using Cryptic.RSA
-  test = Cryptic.RSA.RSA1024();
-  publictest = Cryptic.RSA.PublicRSA1024(test);
-  privtest = Cryptic.RSA.PrivRSA1024(test);
-  entest = Cryptic.RSA.encrypt("Example",publictest);
-  Cryptic.RSA.decrypt(entest,privtest)
-```
-#Stream ciphers
+Example
+
+    using Cryptic.RSA
+    test = Cryptic.RSA.RSA1024();
+    publictest = Cryptic.RSA.PublicRSA1024(test);
+    privtest = Cryptic.RSA.PrivRSA1024(test);
+    entest = Cryptic.RSA.encrypt("Example",publictest);
+    Cryptic.RSA.decrypt(entest,privtest)
+
+### Stream ciphers
 
 #### Grain
 
 Generatin Grain bit stream:
 
-	key = BitArray( round( rand(80) ) )
-	iv = BitArray( round( rand(64) ) )
-	#s, b - internal registers
-	s, b = grain_init( key, iv )
-	#o - output
-	o, s, b = grain_stream( 100, s, b )
-	o
-
+    key = BitArray( round( rand(80) ) )
+    iv = BitArray( round( rand(64) ) )
+    #s, b - internal registers
+    s, b = grain_init( key, iv )
+    #o - output
+    o, s, b = grain_stream( 100, s, b )
 
 #### Trivium
 
 Generating Trivium bit stream:
 
-	key = BitArray( round( rand(80) ) )
-	iv = BitArray( round( rand(80) ) )
-	#state - internal register
-	state = trivium_init( key, iv )
-	#o - output
-	o, state = trivium_stream( 100, state )
-	o
+    key = BitArray( round( rand(80) ) )
+    iv = BitArray( round( rand(80) ) )
+    #state - internal register
+    state = trivium_init( key, iv )
+    #o - output
+    o, state = trivium_stream( 100, state )
+    o
 
 #### Mickey
 
 Generating Mickey bit stream:
 
-	key = BitArray( round( rand(80) ) )
-	iv = BitArray( round( rand(80) ) )
-	#s, b - internal registers
-	r, s = mickey_init( key, iv )
-	#o - output
-	o, r, s = mickey_stream( 100, r, s )
-	o
+    key = BitArray( round( rand(80) ) )
+    iv = BitArray( round( rand(80) ) )
+    #s, b - internal registers
+    r, s = mickey_init( key, iv )
+    #o - output
+    o, r, s = mickey_stream( 100, r, s )
+    o
 
 #### Salsa20
 
 Generating encrypted message with given key and iv.
 
-	key = convert( Array{UInt8}, rand( 0:255, 16 ) )
-	iv = convert( Array{UInt8}, rand( 0:255, 16 ) )
-	msg = convert( Array{UInt8}, rand( 0:255, 1000 ) )
-	salsa20( key, iv, msg)
+    key = convert( Array{UInt8}, rand( 0:255, 16 ) )
+    iv = convert( Array{UInt8}, rand( 0:255, 16 ) )
+    msg = convert( Array{UInt8}, rand( 0:255, 1000 ) )
+    salsa20( key, iv, msg)
 
-	key1 = convert( Array{UInt8}, rand( 0:255, 16 ) )
-	key2 = convert( Array{UInt8}, rand( 0:255, 16 ) )
-	iv = convert( Array{UInt8}, rand( 0:255, 16 ) )
-	msg = convert( Array{UInt8}, rand( 0:255, 1000 ) )
-	salsa20( key1, key2, iv, msg)
+    key1 = convert( Array{UInt8}, rand( 0:255, 16 ) )
+    key2 = convert( Array{UInt8}, rand( 0:255, 16 ) )
+    iv = convert( Array{UInt8}, rand( 0:255, 16 ) )
+    msg = convert( Array{UInt8}, rand( 0:255, 1000 ) )
+    salsa20( key1, key2, iv, msg)
 
-# Hash functions
+### Hash functions
+
 #### md5
 
 Standart md5 function, to use call one of functions:
 
-	md5(msg::ASCIIString)
-	md5(msg::Array{UInt8})
-	md5(file::IO)
+    md5(msg::ASCIIString)
+    md5(msg::Array{UInt8})
+    md5(file::IO)
 
 md5 is not safe actually.
 
@@ -198,7 +200,7 @@ Basic SHA2 hashing function that operates on blocks of 256 bits.
 
 SHA256 takes as parameter string, which next will be computed. Normal text that will be computed can be passed, as well as path to file. If file exist, then hash function from this file will be computed.
 
-####  bCrypt
+#### bCrypt
 
 Strong hashing function.
 
@@ -214,37 +216,38 @@ To generate random salt you can use **gensalt** function and provide number of r
 
 Strong hashing 512 bits function, for use simply call one of functions:
 
-	whirpool(msg::ASCIIString)
-	whirpool(msg::Array{UInt8})
-	whirpool(file::IO)
+    whirpool(msg::ASCIIString)
+    whirpool(msg::Array{UInt8})
+    whirpool(file::IO)
 
-
-# Historic
+### Historic
 
 #### Enigma
 
 Simply implementation of 3 rotors enigma with reflector. To use call function:
 
-	enigma(letters::ASCIIString, key:ASCIIString, msg:ASCIIString)
+    enigma(letters::ASCIIString, key:ASCIIString, msg:ASCIIString)
 
 Where letters are in form:
 
-	"AB CD"
-	
+    "AB CD"
+
 which means, that we replace A->B, B->A, and C->D, D->C
 
 key is ASCIIString of length 3, if no key is specified or key is less than 3 characters, default key will be established ("ABC")
 
 spaces are not encrypted.
 
-# primality tests: (ks)
+### primality tests: (ks)
+
 - miller-rabin (ks)
 - bpsw (ks)
 - aks (ks)
 
-# Module RandomGenerators
+### Module RandomGenerators
 
 Every generator contains two function:
+
 - **nextbit!(gen::Any)** - generates next random bit
 - **nextnumber!(gen::Any)** - generates next number
 
@@ -269,19 +272,16 @@ Safety of this generator is based on discrete logarithm problem.
     gen=BlumMicali()
     nextbit!(gen)
 
-## Random prime number
+### Random prime number
 
 #### Gordon algorithm
 
 Algorithm allows to generate strong prime number **p** that meets specific requirements:
+
 - **p - 1** have big prime factor, denoted by **r**
 - **p + 1** have big prime factor,
 - **r - 1** have big prime factor.
 
-
     gordonalgorithm(bits::Number=512)
 
-
 Bits parameter is the minimum bits size of generated strong prime number.
-
-

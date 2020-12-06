@@ -3,14 +3,14 @@ module Serpent
 
 export Serpent128
 
-type Serpent128
+struct Serpent128
     key::Array{Int64, 2}
     buffer::Array{UInt8}
     bits::Int64
     encrypt::Function
     decrypt::Function
 
-    Serpent128(key::ASCIIString) = begin
+    Serpent128(key::String) = begin
         new(makekey(stringtobytearray(key)), zeros(UInt8), 128, encrypt, decrypt) 
     end
     Serpent128(key::Array{UInt8}) = begin
@@ -18,7 +18,7 @@ type Serpent128
     end
 end
 
-function LL (x)
+function LL(x)
     return convert(UInt8, x)
 end
 
@@ -207,7 +207,7 @@ function setbit(x, i, v)
     return x
 end
 
-function permutate (T, x)
+function permutate(T, x)
     result = zeros(Int64, 4)
     for i in 1:128
         bit = getbit(x, T[i] & 0x7F)
@@ -302,7 +302,7 @@ function rinverse(i, BhatiPlus1, Khat)
     return Bhati
 end
 
-function stringtobytearray(str::ASCIIString)
+function stringtobytearray(str::String)
     ret = zeros(UInt8, 0)
     for i in str
         push!(ret, convert(UInt8, i))

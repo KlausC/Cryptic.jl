@@ -3,7 +3,7 @@ export RSA1024, PublicRSA1024, PrivRSA1024, encrypt, decrypt, signature, verifys
 
 using Cryptic.RandomGenerators
 
-type RSA1024
+struct RSA1024
     publicKey::Array{BigInt}
     privateKey::Array{BigInt}
     k::BigInt
@@ -23,7 +23,7 @@ type RSA1024
     end 
 end
 
-type PublicRSA1024
+struct PublicRSA1024
     publicKey::Array{BigInt}
     k::BigInt
     l::BigInt
@@ -32,7 +32,7 @@ type PublicRSA1024
     end
 end
 
-type PrivRSA1024
+struct PrivRSA1024
     privateKey::Array{BigInt}
     k::BigInt
     l::BigInt
@@ -58,7 +58,7 @@ function generatekeys()
     return [[na,ea];[na,da]]
 end
 
-function encrypt(buf::Union{ASCIIString, IOStream, Array{UInt8}}, publicRSA::PublicRSA1024) 
+function encrypt(buf::Union{String, IOStream, Array{UInt8}}, publicRSA::PublicRSA1024) 
     databuffer = Array{UInt8}()
     if typeof(buf)<:IOStream
         databuffer = readall(buf)
@@ -115,14 +115,14 @@ function getletters(num::BigInt, len::BigInt)
     return letters
 end
 
-function signature(message::Union{Array{UInt8},ASCIIString}, privRSA::PrivRSA1024)
+function signature(message::Union{Array{UInt8},String}, privRSA::PrivRSA1024)
     m = calcm(Array{UInt8}(message), BigInt(length(message)))
     h = hash(m)
     s = h % privRSA.privateKey[1]
     return powermod(s,privRSA.privateKey[2],privRSA.privateKey[1])
 end
 
-function verifysign(message::Union{Array{UInt8},ASCIIString}, signa::BigInt, publicRSA::PublicRSA1024)
+function verifysign(message::Union{Array{UInt8},String}, signa::BigInt, publicRSA::PublicRSA1024)
     m = calcm(Array{UInt8}(message), BigInt(length(message)))
     w = powermod(signa,publicRSA.publicKey[2],publicRSA.publicKey[1])
     v = hash(m) % publicRSA.publicKey[1]

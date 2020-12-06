@@ -1,0 +1,4 @@
+name = "Cryptic"
+uuid = "6ba01ec9-8766-4bb9-a342-8b4aa0ee43ad"
+authors = ["Tomasz Balcerzak (Khrodor)"]
+version = "0.1.0"

@@ -4,7 +4,7 @@ module AES
 
 export AES256, setbuffer!
 
-type AES256
+struct AES256
     key::Array{UInt8}
     enckey::Array{UInt8}
     deckey::Array{UInt8}
@@ -32,10 +32,10 @@ type AES256
     end
 end
 
-function setbuffer!(ctx::AES256, buf::ASCIIString; file::Bool=true)
+function setbuffer!(ctx::AES256, buf::String; file::Bool=true)
     if isfile(buf) && file
         f::IOStream = open(buf)
-        content::ASCIIString=readall(f)
+        content::String=readall(f)
         close(f)
         ctx.buffer=Vector{UInt8}(content)
     else
@@ -422,7 +422,7 @@ function tests()
     
     #encrypt/decrypt
     encaesobj::AES256 = AES256("encrypting")
-    fraze::ASCIIString = "encryptordecrypt"
+    fraze::String = "encryptordecrypt"
     setbuffer!(encaesobj, fraze)
     encrypt(encaesobj.buffer, encaesobj.enckey)
     decrypt(encaesobj.buffer, encaesobj.deckey)

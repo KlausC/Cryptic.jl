@@ -2,7 +2,7 @@ module BCrypt
 
 export bCrypt, hashpw, gensalt
 
-type bCrypt
+struct bCrypt
     gensaltdefaultlog2rounds::Int
     bcryptsaltlen::Int
     blowfishnumrounds::Int
@@ -303,7 +303,7 @@ function char64(this::bCrypt, x::Char)
     return this.index64[code+1]
 end
 
-function decodebase64(this::bCrypt, s::ASCIIString, maxolen::Int)
+function decodebase64(this::bCrypt, s::String, maxolen::Int)
     local off::Int = 1
     local slen::Int = length(s)
     local olen::Int = 0
@@ -521,8 +521,8 @@ function cryptraw(this::bCrypt, password::AbstractArray, salt::Array{Int64}, log
     end
 end
 
-function hashpw(this::bCrypt, password::ASCIIString, salt::ASCIIString)
-    local real_salt::ASCIIString = ""
+function hashpw(this::bCrypt, password::String, salt::String)
+    local real_salt::String = ""
     local passwordb::AbstractArray = []
     local saltb::Array{Int64} = Array{Int64}(0)
     local minor::Char = Char(0)
@@ -581,10 +581,10 @@ function hashpw(this::bCrypt, password::ASCIIString, salt::ASCIIString)
     
     local ret::Array{Int8} = cryptraw(this, passwordb, saltb, rounds, this.bfcryptciphertext[1:end])
     
-    local rs::Array{ASCIIString} = Array{ASCIIString}(0)
+    local rs::Array{String} = Array{String}(0)
     push!(rs,"\$2")
     if (minor >= 'a')
-        push!(rs,convert(ASCIIString, string(minor)))
+        push!(rs,convert(String, string(minor)))
     end
     push!(rs,"\$")
     if (rounds < 10)
@@ -602,7 +602,7 @@ function gensalt(this::bCrypt, rounds::Int)
     if (iteration_count < 4 || iteration_count > 30)
         error("Rounds exceded maximum (30)!")
     end
-    local output::Array{ASCIIString} = Array{ASCIIString}(0)
+    local output::Array{String} = Array{String}(0)
     push!(output, "\$2a\$")
     if (iteration_count < 10)
         push!(output, "0")

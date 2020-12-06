@@ -18,7 +18,7 @@ module Whirpool
 		whirpool(bytes)
 	end
 
-	function whirpool(str::ASCIIString)
+	function whirpool(str::String)
 		bytes = stringtobytearray(str)
 		whirpool(bytes)
 	end
@@ -728,7 +728,7 @@ module Whirpool
 		return arr
 	end
 
-	function stringtobytearray(str::ASCIIString)
+	function stringtobytearray(str::String)
 		ret = zeros(UInt8, 0)
 		for i in str
 			push!(ret, convert(UInt8, i))

@@ -95,7 +95,7 @@ export md5
     end
 
 
-    function md5(msg::ASCIIString)
+    function md5(msg::String)
         return md5(stringtobytearray(msg))
     end
     
@@ -112,7 +112,7 @@ export md5
         return ((x & 0x000000ff) <<24) | (x >>24) | ((x & 0x00ff0000) >>8)  | ((x & 0x0000ff00) <<8)
     end
 
-    function stringtobytearray(str::ASCIIString)
+    function stringtobytearray(str::String)
         ret = zeros(UInt8, 0)
         for i in str
             push!(ret, convert(UInt8, i))

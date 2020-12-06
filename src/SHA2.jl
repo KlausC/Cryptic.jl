@@ -4,16 +4,16 @@ module SHA2
 export SHA256, compute!
 
 macro sha256blocksize()
-    const block::UInt32 = (512/8)
+    block::UInt32 = (512/8)
     return :($block)
 end
 macro digestsize()
-    const size::UInt32 = (256/8)
+    size::UInt32 = (256/8)
     return :($size)
 end
 
 macro sha256k(idx)
-    const sha256karr::Array{Int64} = 
+    sha256karr::Array{Int64} = 
         [0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
         0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
         0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
@@ -33,7 +33,7 @@ macro sha256k(idx)
     return :($sha256karr[$idx])
 end
 
-type SHA256
+struct SHA256
     mtotlen::UInt32
     mlen::UInt32
     mblock::AbstractArray{UInt8}
@@ -41,7 +41,7 @@ type SHA256
 
     message::Array{UInt8}
     
-    SHA256(message::ASCIIString; file::Bool=true)=begin
+    SHA256(message::String; file::Bool=true)=begin
         local mh::Array{UInt32}=zeros(UInt8,8)
         mh[1] = 0x6a09e667
         mh[2] = 0xbb67ae85
@@ -55,7 +55,7 @@ type SHA256
         local buffer::Array{UInt8}
         if file && isfile(message)
             f::IOStream = open(message)
-            content::ASCIIString=readall(f)
+            content::String=readall(f)
             close(f)
             buffer=Vector{UInt8}(content)
         else
@@ -79,12 +79,15 @@ function sha2pack32!(str::AbstractArray{UInt8}, x::AbstractArray{UInt32})
     local val::UInt32 = 0
     try
         val |= (str[4])
+    catch
     end
     try
         val |= (UInt32(str[3]) << 8)
+    catch
     end
     try
         val |= (UInt32(str[2]) << 16)
+    catch
     end
     val |= (UInt32(str[1]) << 24)
     x[1]=val
@@ -93,12 +96,15 @@ end
 function sha2unpack32!(x::UInt32, str::AbstractArray{UInt8})
     try
         str[4] |= UInt8(x & 0xff)
+    catch
     end
     try
         str[3] |= UInt8((x >> 8) & 0xff)
+    catch
     end
     try
         str[2] |= UInt8((x >> 16) & 0xff)
+    catch
     end
     str[1] |= UInt8(x >> 24)
 end
@@ -116,6 +122,7 @@ function transform!(message::Array{UInt8}, blocknb::UInt32, mh::Array{UInt32})
         for j in 1:1:16
             try
                 sha2pack32!(sub(subblock, ((j-1)<<2)+1:((j-1)<<2)+1), sub(w, j:j))
+            catch
             end
         end
         for j in 17:1:64

@@ -5,13 +5,13 @@ using Cryptic.AES
 
 export ECB, CBC, CFB, encrypt, decrypt
 
-abstract AbstractBlockEncryption
+abstract type AbstractBlockEncryption end
 
-type ECB 
+struct ECB 
     encryptionType
 end
 
-type CBC
+struct CBC
     encryptionType
     initialVector::Array{UInt8}
     CBC(encryptionType, initialVector) = begin
@@ -23,7 +23,7 @@ type CBC
     end
 end
 
-type CFB
+struct CFB
     encryptionType
     initialVector::Array{UInt8}
     CFB(encryptionType, initialVector) = begin

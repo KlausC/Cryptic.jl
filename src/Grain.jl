@@ -20,7 +20,7 @@ function grain_updatensfr( b::BitArray, si )
 end
 
 a = [1,2,4,10,31,43,56]
-a += 1
+a .+= 1
 
 function grainh( s::BitArray, b::BitArray )
     
